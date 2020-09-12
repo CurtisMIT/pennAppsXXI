@@ -149,7 +149,7 @@ while True:
 
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i])
-        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        cv2.circle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
         points[i]["innerList"].append(y+h/2)
         for contour in fourButtonContours:
@@ -159,7 +159,7 @@ while True:
                 found = True
                 print(fingerInShape)
             # Left 
-
+                
             # Bot 
     
     # show original frame with shapes and yellow objects
