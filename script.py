@@ -1,7 +1,6 @@
 from contourCoordinates import contourCoordinates
 import cv2
 import numpy as np
-from shapedetector import ShapeDetector
 
 #from playsound import playsound
 import time
@@ -58,13 +57,15 @@ botRight1_Y = 600
 botRight1_XW = 1200
 botRight1_XH = 700
 
+logo = cv2.imread('blueCircle.png', -1)
+alpha = 0.4
+
 
 # Infinite for loop
 while True:
 
     # read camera
     ret, img = cam.read()
-    img = cv2.flip(img,1)
 
     # capture first frame to recognize shapes
     if first_frame is None:
