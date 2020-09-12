@@ -12,6 +12,11 @@ def contourCoordinates(img):
     # Finding Contours 
     contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-    return contours, hierarchy
+    # print(contours) 
+    # print("Number of Contours found = " + str(len(contours))) 
+
+    return contours
     
+    # Draw all contours 
+    # -1 signifies drawing all contours 
     # cv2.drawContours(image, contours, -1, (0, 255, 0), 3) 
