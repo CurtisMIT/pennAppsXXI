@@ -2,7 +2,8 @@ from contourCoordinates import contourCoordinates
 import cv2
 import numpy as np
 from shapedetector import ShapeDetector
-from playsound import playsound
+
+#from playsound import playsound
 import time
 
 # lower and upper bound for yellow color in HSV
@@ -39,6 +40,7 @@ while True:
 
     # read camera
     ret, img = cam.read()
+    img = cv2.flip(img,1)
 
     # capture first frame to recognize shapes
     if first_frame is None:
@@ -64,7 +66,10 @@ while True:
     thresh = cv2.threshold(blurred, 180, 255, cv2.THRESH_BINARY_INV)[1]
 
     # initialize shape detecting class
+<<<<<<< HEAD
     # sd = ShapeDetector()
+=======
+>>>>>>> 21ac352f7a4152d7b96ce080d911c85f9f3a709a
 
     # get contours from transformed small frame
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
@@ -78,6 +83,7 @@ while True:
     # bot-right
     cv2.circle(img,(1100,550), 75, (0,0,255), 8)
     # loop through contours
+<<<<<<< HEAD
     # newShapes = []
 
     # new_cnts = [c for c in cnts if 300 < cv2.contourArea(c) < 4000]
@@ -115,6 +121,36 @@ while True:
     print("Number of Contours found = " + str(len(fourButtonContours))) 
     # shapes = newShapes
 
+=======
+    #newShapes = []
+
+    new_cnts = [c for c in cnts if 2000 < cv2.contourArea(c) < 5000]
+    new_cnts = [c for c in new_cnts if cv2.contourArea(c, True) > 0]
+    for c in range(len(new_cnts)):
+
+        # compute the center of the contour
+        M = cv2.moments(new_cnts[c])
+        # if going to divide by 0 then skip
+        if M["m00"] != 0:
+            cX = int(M["m10"] / M["m00"] * ratio)
+            cY = int(M["m01"] / M["m00"] * ratio)
+        #shape = sd.detect(new_cnts[c])
+
+        new_cnts[c] = new_cnts[c].astype("float")
+        new_cnts[c] *= ratio
+        new_cnts[c] = new_cnts[c].astype("int")
+        cv2.drawContours(img, [new_cnts[c]], -1, (0, 255, 0), 2)
+        #cv2.putText(img, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+        #  0.5, (255, 255, 255), 2)
+
+        # append to shapes array to save shape
+        #newShapes.append(
+        #    {"shapenum": c, "shape": new_cnts[c], "shapename": shape, "area": cv2.contourArea(new_cnts[c]), "x-co": cX})
+
+        # make detected_shapes true to only store shapes once
+
+    #shapes = newShapes
+>>>>>>> 21ac352f7a4152d7b96ce080d911c85f9f3a709a
     # masking image to get yellow color
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(imgHSV, yellowLowerBound, yellowUpperBound)
@@ -160,7 +196,7 @@ while True:
             # figure out how to get only yellow and return value
             # clean the shapes up 
 
-                print(fingerInShape)
+                #print(fingerInShape)
             #     currently_in = {
             #         "shape": shape["shapename"], "x-co": shape["x-co"], "area": shape["area"]}
             # elif cv2.pointPolygonTest(shape["shape"], (x+w, y+h), True) >= 0:
@@ -177,7 +213,10 @@ while True:
     resized_img = cv2.resize(img, (int(width/2), int(height/2)))
     cv2.imshow("image", resized_img)
     cv2.imshow("thresh", thresh)
-    cv2.waitKey(1)
+    k=cv2.waitKey(1)
+
+    if key & 0xFF== ord('q'): 
+        break
 
 cam.release()
 cv2.destroyAllWindows()
