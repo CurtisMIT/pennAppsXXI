@@ -26,6 +26,9 @@ points = []
 # play bool
 play_sound = False
 
+direction = -1
+#0 is left up, 1 is right up, 2 is left down, 3 is right down
+
 # Set up opening and closing filter
 kernelOpen = np.ones((5, 5))
 kernelClose = np.ones((20, 20))
@@ -34,9 +37,6 @@ fingerExists = False
 fingerInShape = False
 
 buffer = None
-
-contour_01 = contourCoordinates("fourbuttons.png")
-print("Number of Contours found = " + str(len(contour_01))) 
 
 # Infinite for loop
 while True:
@@ -117,7 +117,10 @@ while True:
     maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
     maskFinal = maskClose
     fourButtonContours, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    # print("Number of Contours found = " + str(len(fourButtonContours))) 
+
+    fourButtonContours= [c for c in fourButtonContours if 400 < cv2.contourArea(c) < 4000]
+    #print("Number of Contours found = " + str(len(fourButtonContours)))
+
     # shapes = newShapes
 
     # masking image to get yellow color
@@ -149,15 +152,39 @@ while True:
 
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i])
-        cv2.circle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
-        points[i]["innerList"].append(y+h/2)
-        for contour in fourButtonContours:
+        #points[i]["innerList"].append(y+h/2)
+        
+        
+
+        for contour in fourButtonContours :
+            
             # Right
             if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
                 fingerInShape = True
                 found = True
-                print(fingerInShape)
+
+                contours_poly = cv2.approxPolyDP(contour, 3, True)
+                a,b,c,d = cv2.boundingRect(contours_poly)
+                
+
+                print("a" + str(a))
+                print("b" + str(b))
+
+                if(0<=a <=300 and 0 <= b <=350): 
+                    direction =0
+                    print("left up")
+                if(700<=a<=1000 and 0<= b <=350):
+                    direction =1
+                    print("right up")
+                if(0<=a <=300 and 300 <= b <=650):
+                    direction =2
+                    print("left down")
+                if(700<=a<=1200 and 350 <= b <=750):
+                    direction =3
+                    print("right down")
+                
             # Left 
                 
             # Bot 
@@ -166,23 +193,11 @@ while True:
     resized_img = cv2.resize(img, (int(width/2), int(height/2)))
     cv2.imshow("image", resized_img)
     cv2.imshow("thresh", thresh)
-    key=cv2.waitKey(1)
+    k =cv2.waitKey(1)
+    
 
-    if key & 0xFF== ord('q'): 
-        break
-
-def contoursfsadf(x, y, w, h, contour):
-    if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
-        fingerInShape = True
-        found = True
-        print(fingerInShape)
-    elif cv2.pointPolygonTest(contour, (x+w, y+h), True) >= 0:
-        fingerInShape = True
-        found = True
-        print(fingerInShape)
-    else: 
-        if found == False:
-            fingerInShape = False
+    if k & 0xFF== ord('q'): 
+         break
 
 cam.release()
 cv2.destroyAllWindows()
