@@ -75,13 +75,13 @@ while True:
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # top-left
-    cv2.circle(img,(0+150,0+100), 75, (255,255,255), -1)
+    cv2.circle(img,(0+150,0+100), 75, (0,0,255), -1)
     # top-right
-    cv2.circle(img,(1100,100), 75, (255,255,255), -1)
+    cv2.circle(img,(1100,100), 75, (0,0,255), -1)
     # bot-left 
-    cv2.circle(img,(150,550), 75, (255,255,255), -1)
+    cv2.circle(img,(150,550), 75, (0,0,255), -1)
     # bot-right
-    cv2.circle(img,(1100,550), 75, (255,255,255), -1)
+    cv2.circle(img,(1100,550), 75, (0,0,255), -1)
     # loop through contours
     # newShapes = []
 
@@ -161,32 +161,28 @@ while True:
             # Left 
 
             # Bot 
-            # find a way to category the contour label 
-            # figure out how to get only yellow and return value
-            # clean the shapes up 
-
-                #print(fingerInShape)
-            #     currently_in = {
-            #         "shape": shape["shapename"], "x-co": shape["x-co"], "area": shape["area"]}
-            # elif cv2.pointPolygonTest(shape["shape"], (x+w, y+h), True) >= 0:
-            #     fingerInShape = True
-            #     found = True
-            #     currently_in = {
-            #         "shape": shape["shapename"], "x-co": shape["x-co"], "area": shape["area"]}
-            # else:
-            #     if found == False:
-            #         fingerInShape = False
     
-
     # show original frame with shapes and yellow objects
     resized_img = cv2.resize(img, (int(width/2), int(height/2)))
     cv2.imshow("image", resized_img)
     cv2.imshow("thresh", thresh)
-    cv2.waitKey(1)
-    # k=cv2.waitKey(1)
+    key=cv2.waitKey(1)
 
-    # if key & 0xFF== ord('q'): 
-    #     break
+    if key & 0xFF== ord('q'): 
+        break
+
+def contoursfsadf(x, y, w, h, contour):
+    if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
+        fingerInShape = True
+        found = True
+        print(fingerInShape)
+    elif cv2.pointPolygonTest(contour, (x+w, y+h), True) >= 0:
+        fingerInShape = True
+        found = True
+        print(fingerInShape)
+    else: 
+        if found == False:
+            fingerInShape = False
 
 cam.release()
 cv2.destroyAllWindows()
