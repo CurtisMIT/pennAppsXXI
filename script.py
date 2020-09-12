@@ -35,6 +35,9 @@ fingerInShape = False
 
 buffer = None
 
+contour_01 = contourCoordinates("fourbuttons.png")
+print("Number of Contours found = " + str(len(contour_01))) 
+
 # Infinite for loop
 while True:
 
@@ -66,24 +69,20 @@ while True:
     thresh = cv2.threshold(blurred, 180, 255, cv2.THRESH_BINARY_INV)[1]
 
     # initialize shape detecting class
-<<<<<<< HEAD
     # sd = ShapeDetector()
-=======
->>>>>>> 21ac352f7a4152d7b96ce080d911c85f9f3a709a
 
     # get contours from transformed small frame
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # top-left
-    cv2.circle(img,(0+150,0+100), 75, (0,0,255), 8)
+    cv2.circle(img,(0+150,0+100), 75, (255,255,255), -1)
     # top-right
-    cv2.circle(img,(1100,100), 75, (0,0,255), 8)
+    cv2.circle(img,(1100,100), 75, (255,255,255), -1)
     # bot-left 
-    cv2.circle(img,(150,550), 75, (0,0,255), 8)
+    cv2.circle(img,(150,550), 75, (255,255,255), -1)
     # bot-right
-    cv2.circle(img,(1100,550), 75, (0,0,255), 8)
+    cv2.circle(img,(1100,550), 75, (255,255,255), -1)
     # loop through contours
-<<<<<<< HEAD
     # newShapes = []
 
     # new_cnts = [c for c in cnts if 300 < cv2.contourArea(c) < 4000]
@@ -118,39 +117,9 @@ while True:
     maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
     maskFinal = maskClose
     fourButtonContours, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    print("Number of Contours found = " + str(len(fourButtonContours))) 
+    # print("Number of Contours found = " + str(len(fourButtonContours))) 
     # shapes = newShapes
 
-=======
-    #newShapes = []
-
-    new_cnts = [c for c in cnts if 2000 < cv2.contourArea(c) < 5000]
-    new_cnts = [c for c in new_cnts if cv2.contourArea(c, True) > 0]
-    for c in range(len(new_cnts)):
-
-        # compute the center of the contour
-        M = cv2.moments(new_cnts[c])
-        # if going to divide by 0 then skip
-        if M["m00"] != 0:
-            cX = int(M["m10"] / M["m00"] * ratio)
-            cY = int(M["m01"] / M["m00"] * ratio)
-        #shape = sd.detect(new_cnts[c])
-
-        new_cnts[c] = new_cnts[c].astype("float")
-        new_cnts[c] *= ratio
-        new_cnts[c] = new_cnts[c].astype("int")
-        cv2.drawContours(img, [new_cnts[c]], -1, (0, 255, 0), 2)
-        #cv2.putText(img, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-        #  0.5, (255, 255, 255), 2)
-
-        # append to shapes array to save shape
-        #newShapes.append(
-        #    {"shapenum": c, "shape": new_cnts[c], "shapename": shape, "area": cv2.contourArea(new_cnts[c]), "x-co": cX})
-
-        # make detected_shapes true to only store shapes once
-
-    #shapes = newShapes
->>>>>>> 21ac352f7a4152d7b96ce080d911c85f9f3a709a
     # masking image to get yellow color
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(imgHSV, yellowLowerBound, yellowUpperBound)
@@ -213,10 +182,11 @@ while True:
     resized_img = cv2.resize(img, (int(width/2), int(height/2)))
     cv2.imshow("image", resized_img)
     cv2.imshow("thresh", thresh)
-    k=cv2.waitKey(1)
+    cv2.waitKey(1)
+    # k=cv2.waitKey(1)
 
-    if key & 0xFF== ord('q'): 
-        break
+    # if key & 0xFF== ord('q'): 
+    #     break
 
 cam.release()
 cv2.destroyAllWindows()
