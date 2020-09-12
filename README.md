@@ -8,7 +8,7 @@
   <h3 align="center">OUR NAME</h3>
 
   <p align="center">
-    An addictive and fun gaming platforms
+    An addictive and fun music gaming platforms
     <br />
     <a href="https://github.com/CurtisMIT/pennAppsXXI"><strong>Explore the docs »</strong></a>
     <br />
