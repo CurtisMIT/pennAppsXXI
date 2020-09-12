@@ -6,8 +6,11 @@ from playsound import playsound
 import time
 
 # lower and upper bound for yellow color in HSV
-lowerBound = np.array([22, 63, 100])
-upperBound = np.array([31, 255, 255])
+yellowLowerBound = np.array([22, 63, 100])
+yellowUpperBound = np.array([31, 255, 255])
+
+redLowerBound = np.array([36,25,25])
+redUpperBound = np.array([70,255,255])
 
 # Get camera
 cam = cv2.VideoCapture(0)
@@ -31,7 +34,6 @@ fingerInShape = False
 
 buffer = None
 
-contours01, hierarchy = contourCoordinates('contourCoordinates.png')
 # Infinite for loop
 while True:
 
@@ -62,45 +64,60 @@ while True:
     thresh = cv2.threshold(blurred, 180, 255, cv2.THRESH_BINARY_INV)[1]
 
     # initialize shape detecting class
-    sd = ShapeDetector()
+    # sd = ShapeDetector()
 
     # get contours from transformed small frame
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-    cv2.circle(img,(100,63), 63, (0,0,255), -1)
-    cv2.circle(img,(800,63), 63, (0,0,255), -1)
+    # top-left
+    cv2.circle(img,(0+150,0+100), 75, (0,0,255), 8)
+    # top-right
+    cv2.circle(img,(1100,100), 75, (0,0,255), 8)
+    # bot-left 
+    cv2.circle(img,(150,550), 75, (0,0,255), 8)
+    # bot-right
+    cv2.circle(img,(1100,550), 75, (0,0,255), 8)
     # loop through contours
-    newShapes = []
+    # newShapes = []
 
-    new_cnts = [c for c in cnts if 300 < cv2.contourArea(c) < 4000]
-    new_cnts = [c for c in new_cnts if cv2.contourArea(c, True) > 0]
-    for c in range(len(new_cnts)):
+    # new_cnts = [c for c in cnts if 300 < cv2.contourArea(c) < 4000]
+    # new_cnts = [c for c in new_cnts if cv2.contourArea(c, True) > 0]
+    # for c in range(len(new_cnts)):
 
-        # compute the center of the contour
-        M = cv2.moments(new_cnts[c])
-        # if going to divide by 0 then skip
-        if M["m00"] != 0:
-            cX = int(M["m10"] / M["m00"] * ratio)
-            cY = int(M["m01"] / M["m00"] * ratio)
-        shape = sd.detect(new_cnts[c])
+    #     # compute the center of the contour
+    #     M = cv2.moments(new_cnts[c])
+    #     # if going to divide by 0 then skip
+    #     if M["m00"] != 0:
+    #         cX = int(M["m10"] / M["m00"] * ratio)
+    #         cY = int(M["m01"] / M["m00"] * ratio)
+    #     shape = sd.detect(new_cnts[c])
 
-        new_cnts[c] = new_cnts[c].astype("float")
-        new_cnts[c] *= ratio
-        new_cnts[c] = new_cnts[c].astype("int")
-        cv2.drawContours(img, [new_cnts[c]], -1, (0, 255, 0), 2)
-        cv2.putText(img, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5, (255, 255, 255), 2)
+    #     new_cnts[c] = new_cnts[c].astype("float")
+    #     new_cnts[c] *= ratio
+    #     new_cnts[c] = new_cnts[c].astype("int")
+    #     cv2.drawContours(img, [new_cnts[c]], -1, (0, 255, 0), 2)
+    #     cv2.putText(img, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+    #                 0.5, (255, 255, 255), 2)
 
-        # append to shapes array to save shape
-        newShapes.append(
-            {"shapenum": c, "shape": new_cnts[c], "shapename": shape, "area": cv2.contourArea(new_cnts[c]), "x-co": cX})
+    #     # append to shapes array to save shape
+    #     newShapes.append(
+    #         {"shapenum": c, "shape": new_cnts[c], "shapename": shape, "area": cv2.contourArea(new_cnts[c]), "x-co": cX})
 
-        # make detected_shapes true to only store shapes once
+    #     # make detected_shapes true to only store shapes once
 
-    shapes = newShapes
+    # masking image to get red color
+    imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(imgHSV, redLowerBound, redUpperBound)
+    maskOpen = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernelOpen)
+    maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
+    maskFinal = maskClose
+    fourButtonContours, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    print("Number of Contours found = " + str(len(fourButtonContours))) 
+    # shapes = newShapes
+
     # masking image to get yellow color
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(imgHSV, lowerBound, upperBound)
+    mask = cv2.inRange(imgHSV, yellowLowerBound, yellowUpperBound)
 
     # opens and closes logic
     maskOpen = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernelOpen)
@@ -108,8 +125,7 @@ while True:
 
     # find contours of yellow color shapes
     maskFinal = maskClose
-    conts, h = cv2.findContours(
-        maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    conts, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     if len(conts) > 0:
         fingerExists = True
@@ -120,7 +136,7 @@ while True:
     currently_in = {"shape": "", "x-co": 0, "area": 0}
     starting_y = 0
     ending_y = 0
-    # draw yellow color rectangle
+    # draw yello color rectangle
     cv2.drawContours(img, conts, -1, (255, 0, 0), 3)
 
     for i in range(len(conts)):
@@ -131,8 +147,8 @@ while True:
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
         points[i]["innerList"].append(y+h/2)
-        for contour in contours01:
-            # Right 
+        for contour in fourButtonContours:
+            # Right
             if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
                 fingerInShape = True
                 found = True
@@ -140,7 +156,6 @@ while True:
             # Left 
 
             # Bot 
-            
             # find a way to category the contour label 
             # figure out how to get only yellow and return value
             # clean the shapes up 
