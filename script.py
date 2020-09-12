@@ -38,6 +38,27 @@ fingerInShape = False
 
 buffer = None
 
+topLeft1_X = 100
+topLeft1_Y = 100
+topLeft1_XW = 200
+topLeft1_XH = 200
+
+topRight1_X = 1100
+topRight1_Y = 100
+topRight1_XW = 1200
+topRight1_XH = 200
+
+botLeft1_X = 100
+botLeft1_Y = 450
+botLeft1_XW = 300
+botLeft1_XH = 650
+
+botRight1_X = 1100
+botRight1_Y = 600
+botRight1_XW = 1200
+botRight1_XH = 700
+
+
 # Infinite for loop
 while True:
 
@@ -68,60 +89,22 @@ while True:
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     thresh = cv2.threshold(blurred, 180, 255, cv2.THRESH_BINARY_INV)[1]
 
-    # initialize shape detecting class
-    # sd = ShapeDetector()
-
     # get contours from transformed small frame
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # top-left
-    cv2.circle(img,(0+150,0+100), 75, (0,0,255), -1)
+    cv2.circle(img,(0+150,0+100), 75, (0,255,255), 2)
     # top-right
-    cv2.circle(img,(1100,100), 75, (0,0,255), -1)
+    cv2.circle(img,(1100,100), 75, (0,255,255), 2)
     # bot-left 
-    cv2.circle(img,(150,550), 75, (0,0,255), -1)
+    cv2.circle(img,(150,550), 75, (0,255,255), 2)
     # bot-right
-    cv2.circle(img,(1100,550), 75, (0,0,255), -1)
-    # loop through contours
-    # newShapes = []
+    cv2.circle(img,(1100,550), 75, (0,255,255), 2)
 
-    # new_cnts = [c for c in cnts if 300 < cv2.contourArea(c) < 4000]
-    # new_cnts = [c for c in new_cnts if cv2.contourArea(c, True) > 0]
-    # for c in range(len(new_cnts)):
-
-    #     # compute the center of the contour
-    #     M = cv2.moments(new_cnts[c])
-    #     # if going to divide by 0 then skip
-    #     if M["m00"] != 0:
-    #         cX = int(M["m10"] / M["m00"] * ratio)
-    #         cY = int(M["m01"] / M["m00"] * ratio)
-    #     shape = sd.detect(new_cnts[c])
-
-    #     new_cnts[c] = new_cnts[c].astype("float")
-    #     new_cnts[c] *= ratio
-    #     new_cnts[c] = new_cnts[c].astype("int")
-    #     cv2.drawContours(img, [new_cnts[c]], -1, (0, 255, 0), 2)
-    #     cv2.putText(img, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-    #                 0.5, (255, 255, 255), 2)
-
-    #     # append to shapes array to save shape
-    #     newShapes.append(
-    #         {"shapenum": c, "shape": new_cnts[c], "shapename": shape, "area": cv2.contourArea(new_cnts[c]), "x-co": cX})
-
-    #     # make detected_shapes true to only store shapes once
-
-    # masking image to get red color
-    imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(imgHSV, redLowerBound, redUpperBound)
-    maskOpen = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernelOpen)
-    maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
-    maskFinal = maskClose
-    fourButtonContours, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-    fourButtonContours= [c for c in fourButtonContours if 400 < cv2.contourArea(c) < 4000]
-    #print("Number of Contours found = " + str(len(fourButtonContours)))
-
-    # shapes = newShapes
+    cv2.rectangle(img,(topLeft1_X,topLeft1_Y), (topLeft1_XW, topLeft1_XH), (0,255,255), 2)
+    cv2.rectangle(img,(topRight1_X,topRight1_Y), (topRight1_XW, topRight1_XH), (0,255,255), 2)
+    cv2.rectangle(img,(botLeft1_X,botLeft1_Y), (botLeft1_XW, botLeft1_XH), (0,255,255), 2)
+    cv2.rectangle(img,(botRight1_X,botRight1_Y), (botRight1_XW, botRight1_XH), (0,255,255), 2)
 
     # masking image to get yellow color
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -150,40 +133,51 @@ while True:
     for i in range(len(conts)):
         points.append({"innerList": []})
 
+    
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i])
+        # print("X" + str(x))
+        # print("Y" + str(y))
+        # print("W" + str(w))
+        # print("H" + str(h))
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        topLeft2_X = x
+        topLeft2_Y = y
+        botRight2_X = x+w
+        botRight2_Y = y+h
 
-        #points[i]["innerList"].append(y+h/2)
-        
-        
-
-        for contour in fourButtonContours :
+        if topLeft2_X > topLeft1_X and topLeft2_Y > topLeft1_Y and botRight2_X < topLeft1_XW and botRight2_Y < topLeft1_XH:
+            print("topleft")
+        elif topLeft2_X > topRight1_X and topLeft2_Y > topRight1_Y and botRight2_X < topRight1_XW and botRight2_Y < topRight1_XH:
+            print("topright")
+        elif topLeft2_X > botLeft1_X and topLeft2_Y > botLeft1_Y and botRight2_X < botLeft1_XW and botRight2_Y < botLeft1_XH: 
+            print("botleft")
+        elif topLeft2_X > botRight1_X and topLeft2_Y > botRight1_Y and botRight2_X < botRight1_XW and botRight2_Y < botRight1_XH: 
+            print("botRight")
             
             # Right
-            if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
-                fingerInShape = True
-                found = True
+            # if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
+            #     fingerInShape = True
+            #     found = True
 
-                contours_poly = cv2.approxPolyDP(contour, 3, True)
-                a,b,c,d = cv2.boundingRect(contours_poly)
+            #     contours_poly = cv2.approxPolyDP(contour, 3, True)
+            #     a,b,c,d = cv2.boundingRect(contours_poly)
                 
 
-                print("a" + str(a))
-                print("b" + str(b))
-
-                if(0<=a <=300 and 0 <= b <=350): 
-                    direction =0
-                    print("left up")
-                if(700<=a<=1000 and 0<= b <=350):
-                    direction =1
-                    print("right up")
-                if(0<=a <=300 and 300 <= b <=650):
-                    direction =2
-                    print("left down")
-                if(700<=a<=1200 and 350 <= b <=750):
-                    direction =3
-                    print("right down")
+            #     print("a" + str(a))
+            #     print("b" + str(b))
+            #     if(0<=a <=300 and 0 <= b <=350): 
+            #         direction =0
+            #         print("left up")
+            #     if(700<=a<=1000 and 0<= b <=350):
+            #         direction =1
+            #         print("right up")
+            #     if(0<=a <=300 and 300 <= b <=650):
+            #         direction =2
+            #         print("left down")
+            #     if(700<=a<=1200 and 350 <= b <=750):
+            #         direction =3
+            #         print("right down")
                 
             # Left 
                 
