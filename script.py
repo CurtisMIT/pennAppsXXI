@@ -26,6 +26,9 @@ points = []
 # play bool
 play_sound = False
 
+direction = -1
+#0 is left up, 1 is right up, 2 is left down, 3 is right down
+
 # Set up opening and closing filter
 kernelOpen = np.ones((5, 5))
 kernelClose = np.ones((20, 20))
@@ -75,13 +78,13 @@ while True:
     cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # top-left
-    cv2.circle(img,(0+150,0+100), 75, (255,255,255), -1)
+    cv2.circle(img,(0+150,0+100), 75, (0,0,255), -1)
     # top-right
-    cv2.circle(img,(1100,100), 75, (255,255,255), -1)
+    cv2.circle(img,(1100,100), 75, (0,0,255), -1)
     # bot-left 
-    cv2.circle(img,(150,550), 75, (255,255,255), -1)
+    cv2.circle(img,(150,550), 75, (0,0,255), -1)
     # bot-right
-    cv2.circle(img,(1100,550), 75, (255,255,255), -1)
+    cv2.circle(img,(1100,550), 75, (0,0,255), -1)
     # loop through contours
     # newShapes = []
 
@@ -117,7 +120,10 @@ while True:
     maskClose = cv2.morphologyEx(maskOpen, cv2.MORPH_CLOSE, kernelClose)
     maskFinal = maskClose
     fourButtonContours, h = cv2.findContours(maskFinal.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    # print("Number of Contours found = " + str(len(fourButtonContours))) 
+
+    fourButtonContours= [c for c in fourButtonContours if 400 < cv2.contourArea(c) < 4000]
+    #print("Number of Contours found = " + str(len(fourButtonContours)))
+
     # shapes = newShapes
 
     # masking image to get yellow color
@@ -149,15 +155,38 @@ while True:
 
     for i in range(len(conts)):
         x, y, w, h = cv2.boundingRect(conts[i])
-        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        #cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
-        points[i]["innerList"].append(y+h/2)
-        for contour in fourButtonContours:
+        #points[i]["innerList"].append(y+h/2)
+        
+        
+
+        for contour in fourButtonContours :
+            
             # Right
             if cv2.pointPolygonTest(contour, (x+w/2, y+h/2), True) >= 0 or cv2.pointPolygonTest(contour, (x, y), True) >= 0:
                 fingerInShape = True
                 found = True
-                print(fingerInShape)
+
+                a,b,_,_ = cv2.boundingRect(contour)
+                
+
+                print(a)
+                print(b)
+
+                if(0<=a <=250 and 0 <= b <=200): 
+                    direction =0
+                    print("left up")
+                if( 900<=a<=1200 and 0<= b <=200):
+                    direction =1
+                    print("right up")
+                if(0<=a<=250 and 400 <= b <=750):
+                    direction =2
+                    print("left down")
+                if(900<=a<=1200 and 400 <= b <=750):
+                    direction =3
+                    print("right down")
+                
             # Left 
 
             # Bot 
@@ -182,11 +211,11 @@ while True:
     resized_img = cv2.resize(img, (int(width/2), int(height/2)))
     cv2.imshow("image", resized_img)
     cv2.imshow("thresh", thresh)
-    cv2.waitKey(1)
-    # k=cv2.waitKey(1)
+    k =cv2.waitKey(1)
+    
 
-    # if key & 0xFF== ord('q'): 
-    #     break
+    if k & 0xFF== ord('q'): 
+         break
 
 cam.release()
 cv2.destroyAllWindows()
