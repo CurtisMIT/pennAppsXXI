@@ -131,7 +131,7 @@ class Camera(object):
         if self.first_frame is None:
             self.first_frame = img
             ret, jpeg = cv2.imencode('.jpg', img)
-            return jpeg.tobytes()
+            return jpeg.tobytes(), jpeg.tobytes()
 
         else:
             if not self.fingerExists:
@@ -142,8 +142,8 @@ class Camera(object):
             # get smaller frame to capture shapes
             imgSmall = cv2.resize(self.buffer, (int(width/4), int(height/4)))
             # resize main frame so its easier to see
-            img = cv2.resize(img, (int(width), int(height)))
             img_copy = img
+            img = cv2.resize(img, (int(width), int(height)))
             # get ratio to multiply shape contours by when drawing them
             ratio = img.shape[0] / float(imgSmall.shape[0])
         
@@ -202,7 +202,7 @@ class Camera(object):
             font = cv2.FONT_HERSHEY_SIMPLEX
             cv2.putText(resized_img,'Score: {}'.format(self.score),(10,500), font, 4,(255,255,255),1,cv2.LINE_AA)
 
-            self.draw_game(resized_img)
+            self.draw_game(img_copy)
 
             for i in range(len(conts)):
                 x, y, w, h = cv2.boundingRect(conts[i])
@@ -226,5 +226,6 @@ class Camera(object):
                     print("botRight")
 
             ret, jpeg = cv2.imencode('.jpg', resized_img)
-            return jpeg.tobytes()
+            ret, game_jpeg = cv2.imencode('.jpg', img_copy)
+            return jpeg.tobytes(), game_jpeg.tobytes()
 
