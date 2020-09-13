@@ -10,7 +10,9 @@
   <p align="center">
     An addictive and fun music game
     <br />
-    <a href="https://github.com/CurtisMIT/pennAppsXXI">View Demo</a>
+    <a href="https://devpost.com/software/tap-tap-revolution">Devpost</a>
+    ·
+    <a href="https://youtu.be/32GyzIIP_WI">View Demo</a>
     ·
     <a href="https://github.com/CurtisMIT/pennAppsXXI/issues">Report Bug</a>
     ·
@@ -34,7 +36,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Air Whack is a project our team submitted for PennApps XXI 2020. It's a fun and interesting take on dance genre games built with OpenCV and served with Flask
+Air Whack is a project our team submitted for PennApps XXI 2020. It's a fun and interesting take on dance genre games built with OpenCV and served with Flask.
 
 ### User Interface
 <p align="center">
@@ -56,20 +58,20 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 1. Clone the repo
 ```sh
-git clone https://github.com/CurtisMIT/pennAppsXXI.git
+$ git clone https://github.com/CurtisMIT/pennAppsXXI.git
 ```
 2. Set up virtual environment
 ```sh
-python3 -m venv env
+$ python3 -m venv env
 ```
 3. install the required libraries
 ```sh
-pip install -r requirements.txt 
+$ pip install -r requirements.txt 
 ```
 
 ### Run Application 
 ```sh
-python server.py
+$ python server.py
 ```
 
 
