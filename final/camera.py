@@ -127,7 +127,7 @@ class Camera(object):
     def get_frame_bytes(self):
         ret, img = self.cap.read()
 
-        img=cv2.flip(img,1)
+        img = cv2.flip(img,1)
 
         # capture first frame to recognize shapes
         if self.first_frame is None:
@@ -202,7 +202,7 @@ class Camera(object):
 
 
             font = cv2.FONT_HERSHEY_SIMPLEX
-            cv2.putText(resized_img,'Score: {}'.format(self.score),(10,500), font, 4,(255,255,255),1,cv2.LINE_AA)
+            cv2.putText(img_copy,'Score: {}'.format(self.score),(10,500), font, 4,(255,255,255),1,cv2.LINE_AA)
 
             self.draw_game(img_copy)
 
