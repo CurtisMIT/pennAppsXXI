@@ -5,13 +5,10 @@
     <img src="images/logo.png" alt="Logo" width="300" height="300">
   </a>
 
-  <h3 align="center">OUR NAME</h3>
+  <h3 align="center">Air Wack</h3>
 
   <p align="center">
-    An addictive and fun music gaming platforms
-    <br />
-    <a href="https://github.com/CurtisMIT/pennAppsXXI"><strong>Explore the docs »</strong></a>
-    <br />
+    An addictive and fun music game
     <br />
     <a href="https://github.com/CurtisMIT/pennAppsXXI">View Demo</a>
     ·
@@ -65,16 +62,11 @@ git clone https://github.com/CurtisMIT/pennAppsXXI.git
 ```sh
 pip install -r requirements.txt 
 ```
-3. Install dependencies
-```sh
-pip install
-```
 
 ### Run Application 
 ```sh
 python script.py
 ```
-
 
 
 <!-- CONTRIBUTING -->
