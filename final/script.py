@@ -136,12 +136,16 @@ while True:
         botRight2_Y = y+h
 
         if topLeft2_X > topLeft1_X and topLeft2_Y > topLeft1_Y and botRight2_X < topLeft1_XW and botRight2_Y < topLeft1_XH:
+            self.pressed_a = True
             print("topleft")
         elif topLeft2_X > topRight1_X and topLeft2_Y > topRight1_Y and botRight2_X < topRight1_XW and botRight2_Y < topRight1_XH:
+            self.pressed_s = True
             print("topright")
         elif topLeft2_X > botLeft1_X and topLeft2_Y > botLeft1_Y and botRight2_X < botLeft1_XW and botRight2_Y < botLeft1_XH: 
+            self.pressed_d = True
             print("botleft")
         elif topLeft2_X > botRight1_X and topLeft2_Y > botRight1_Y and botRight2_X < botRight1_XW and botRight2_Y < botRight1_XH: 
+            self.pressed_f = True
             print("botRight")
     
     # show original frame with shapes and yellow objects

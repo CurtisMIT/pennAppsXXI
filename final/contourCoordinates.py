@@ -16,7 +16,3 @@ def contourCoordinates(img):
     # print("Number of Contours found = " + str(len(contours))) 
 
     return contours
-    
-    # Draw all contours 
-    # -1 signifies drawing all contours 
-    # cv2.drawContours(image, contours, -1, (0, 255, 0), 3) 
