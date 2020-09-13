@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/CurtisMIT/pennAppsXXI">
-    <img src="images/logo.png" alt="Logo" width="300" height="300">
+    <img src="assets/images/airWhackLogo.jpg" alt="Logo" >
   </a>
 
   <h3 align="center">Air Wack</h3>
@@ -34,17 +34,17 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Blah blah blah Balh
+Air Whack is a project our team submitted for PennApps XXI 2020. It's a fun and interesting take on dance genre games built with OpenCV and served with Flask
 
 ### User Interface
 <p align="center">
-<img src="images/UserInterface.png" alt="userinterface">
+<img src="assets/images/UI.png" alt="UI">
 </p>
 
 <!-- PIPELINE -->
 ## Pipeline
 <p align="center">
-<img src="images/pipeline01.png" alt="pipeline">
+<img src="assets/images/pipeline.png" alt="pipeline">
 </p>
 
 <!-- GETTING STARTED -->
@@ -58,14 +58,18 @@ To get a local copy up and running follow these simple example steps.
 ```sh
 git clone https://github.com/CurtisMIT/pennAppsXXI.git
 ```
-2. install the required libraries
+2. Set up virtual environment
+```sh
+python3 -m venv env
+```
+3. install the required libraries
 ```sh
 pip install -r requirements.txt 
 ```
 
 ### Run Application 
 ```sh
-python script.py
+python server.py
 ```
 
 
