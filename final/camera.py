@@ -127,6 +127,8 @@ class Camera(object):
     def get_frame_bytes(self):
         ret, img = self.cap.read()
 
+        img=cv2.flip(img,1)
+
         # capture first frame to recognize shapes
         if self.first_frame is None:
             self.first_frame = img
@@ -156,13 +158,13 @@ class Camera(object):
             cnts, h = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
         
             # top-left
-            cv2.circle(img,(int((self.topLeft1_X+self.topLeft1_XW)/2),int((self.topLeft1_Y+self.topLeft1_XH)/2)), 75, (0,255,255), 2)
+            cv2.circle(img,(int((self.topLeft1_X+self.topLeft1_XW)/2),int((self.topLeft1_Y+self.topLeft1_XH)/2)), 75, (0,255,0), 2)
             # top-right
-            cv2.circle(img,(int((self.topRight1_X+self.topRight1_XW)/2),int((self.topRight1_Y+self.topRight1_XH)/2)), 75, (0,255,255), 2)
+            cv2.circle(img,(int((self.topRight1_X+self.topRight1_XW)/2),int((self.topRight1_Y+self.topRight1_XH)/2)), 75, (0,0,255), 2)
             # bot-left 
-            cv2.circle(img,(int((self.botLeft1_X+self.botLeft1_XW)/2),int((self.botLeft1_Y+self.botLeft1_XH)/2)), 75, (0,255,255), 2)
+            cv2.circle(img,(int((self.botLeft1_X+self.botLeft1_XW)/2),int((self.botLeft1_Y+self.botLeft1_XH)/2)), 75, (255,0,0), 2)
             # bot-right
-            cv2.circle(img,(int((self.botRight1_X+self.botRight1_XW)/2),int((self.botRight1_Y+self.botRight1_XH)/2)), 75, (0,255,255), 2)
+            cv2.circle(img,(int((self.botRight1_X+self.botRight1_XW)/2),int((self.botRight1_Y+self.botRight1_XH)/2)), 75, (125,125,125), 2)
         
             # masking image to get yellow color
             imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
